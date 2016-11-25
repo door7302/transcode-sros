@@ -16,17 +16,17 @@ Ouput : create a flat config file named : flat-<my-sros-config-file>
 Example. 
 
 >> more mysros.cfg 
-# TiMOS-C-14.0.R4 cpm/hops64 Nokia 7750 SR Copyright (c) 2000-2016 Nokia.
-# All rights reserved. All use subject to applicable license agreements.
-# Built on Thu Jul 28 17:28:47 PDT 2016 by builder in /rel14.0/b1/R4/panos/main
+TiMOS-C-14.0.R4 cpm/hops64 Nokia 7750 SR Copyright (c) 2000-2016 Nokia.
+All rights reserved. All use subject to applicable license agreements.
+Built on Thu Jul 28 17:28:47 PDT 2016 by builder in /rel14.0/b1/R4/panos/main
 
-# Generated FRI NOV 25 08:15:08 2016 UTC
+Generated FRI NOV 25 08:15:08 2016 UTC
 
 exit all
 configure
-#--------------------------------------------------
+--------------------------------------------------
 echo "System Configuration"
-#--------------------------------------------------
+--------------------------------------------------
     system
         name "BOB"
         location "Bayonne Hardoy"

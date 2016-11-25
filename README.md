@@ -17,7 +17,7 @@ Ouput : create a flat config file named : flat-<my-sros-config-file>
 
 Example. 
 
->> more mysros.cfg 
+more mysros.cfg 
 	Generated FRI NOV 25 08:15:08 2016 UTC
 
 	exit all
@@ -63,11 +63,11 @@ Example.
 			exit
 		exit
     
->> python trancode-sros.py mysros.cfg
+python trancode-sros.py mysros.cfg
 
 	Flat config has been pushed in file: ./flat-mysros.cfg
 
->> more flat-mysros.cfg 
+more flat-mysros.cfg 
 	configure system name "BOB"
 	configure system location "Bayonne Hardoy"
 	configure system chassis-mode d

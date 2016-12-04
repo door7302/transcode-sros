@@ -4,22 +4,18 @@
 # The only limitation is do not have 4 space characters in your description as indentation is 
 # made of 4 space characters
 #
-#  
+# Vaersion 1.1
+#
+# Usage 
+# python transcode-sros.sh <your-config-file>
+#   or to save in file
+# python transcode-sros.sh <your-config-file> > flat-config.txt
+
 import sys
+import fileinput
 
 # INIT file path
-file_cfg = "./" + str(sys.argv[1])
-
-try:
-	#Load config file
-	cfg_desc = open(file_cfg, 'r')
-except IOError:
-	print "\nError: file not found"
-	sys.exit()
-	
-#target file 
-file_target = "./flat-" + str(sys.argv[1])
-flat_desc = open(file_target, 'w')
+file_cfg = fileinput.input()
 
 tab_LINE = [] 
 index =0 
@@ -27,7 +23,7 @@ last_indentation =0
 indentation = 0
 exit_found = False
 
-for read in cfg_desc :
+for read in file_cfg :
 	# Read an config line
 	line = read
 	# Extract Comment lines
@@ -38,12 +34,23 @@ for read in cfg_desc :
 		if isEcho != 'echo':
 			if line.strip()!='' and line.strip() != 'exit all':
 				#SROS indentation is made of 4 space characters
-				indentation = line.count('    ')
-				
+				indentation = line.count('    ')			
 				#Manage line that are not made of an exit 
 				if line.strip() != 'exit':	
 					#If current line is more specific that previous one add word to the list
 					if ((indentation > last_indentation ) or indentation == 0 ):
+						#Add the / for configure statement
+						if line.strip() == 'configure':
+							line = '/'+ line
+						#manage line with create word differently
+						if 'create' in line.strip():
+							create_line = ' '.join(tab_LINE) + ' ' + line.strip()
+							print create_line
+							line = line.replace(' create','').strip()
+						if index>0 and 'create' in tab_LINE[index-1]:
+							print ' '.join(tab_LINE)
+							tab_LINE[index-1] = tab_LINE[index-1].replace(' create','')
+							
 						tab_LINE.append(line.strip())
 						index+=1
 						exit_found = False
@@ -56,17 +63,19 @@ for read in cfg_desc :
 						if exit_found:							
 							del tab_LINE[index-1]
 							tab_LINE.append(line.strip())
-							flat_desc.write(' '.join(tab_LINE) + '\n')
+							print ' '.join(tab_LINE)
 						else:
-							flat_desc.write(' '.join(tab_LINE) + '\n')
+							print ' '.join(tab_LINE)
 							del tab_LINE[index-1]
 							tab_LINE.append(line.strip())
 					last_indentation = indentation
+					
+						
 				#Manage line with an exit statement
 				else:
 					if exit_found != True:
 						if last_indentation != indentation:
-							flat_desc.write(' '.join(tab_LINE) + '\n')
+							print ' '.join(tab_LINE)
 							del tab_LINE[index-1]
 							index-=1
 							del tab_LINE[index-1]
@@ -80,7 +89,4 @@ for read in cfg_desc :
 						index-=1	
 						last_indentation = indentation - 1
 				
-cfg_desc.close ()
-flat_desc.close()
-mystr = "\nFlat config has been pushed in file: " + file_target
-print mystr
+sys.stdout.close ()
